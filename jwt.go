@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/request"
 	"github.com/zenazn/goji/web"
 )
 
@@ -41,12 +42,12 @@ func NewMiddleware(
 		return http.HandlerFunc(
 			func(w http.ResponseWriter, r *http.Request) {
 				if c.Env == nil {
-					c.Env = make(map[string]interface{})
+					c.Env = make(map[interface {}]interface{})
 				}
 				v := CValue{}
 				t := tokenFunc(c, r)
 				if t == "" {
-					v.Error = jwt.ErrNoTokenInRequest
+					v.Error = request.ErrNoTokenInRequest
 				} else {
 					v.Token, v.Error = jwt.Parse(tokenFunc(c, r), keyFunc)
 				}
